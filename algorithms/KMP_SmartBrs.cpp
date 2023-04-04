@@ -1,0 +1,37 @@
+#include "KMP_StandardBr.cpp"
+
+std::vector<int> calcBrs(std::string s) {
+    int n = s.length();
+    std::vector<int> br = calcBr(s), brs(n);
+    for (int i = 1; i < n; ++i) {
+        if (br[i] > 0) {
+            if (i == n - 1 || s[br[i]] != s[i + 1]) {
+                brs[i] = br[i];
+            } else {
+                brs[i] = brs[br[i] - 1];
+            }
+        }
+    }
+    return brs;
+}
+
+std::vector<int> smartKmp(std::string s, std::string t) {
+    int n = s.length();
+    std::vector<int> brs = calcBrs(s);
+    int num = 0;
+    int m = t.length();
+    std::vector<int> answer;
+    for (int i = 0; i < m; ++i) {
+        while (num > 0 && t[i] != s[num]) {
+            num = brs[num - 1];
+        }
+        if (t[i] == s[num]) {
+            ++num;
+        }
+        if (num == n) {
+            answer.push_back(i - num + 1);
+            num = brs[num - 1];
+        }
+    }
+    return answer;
+}
