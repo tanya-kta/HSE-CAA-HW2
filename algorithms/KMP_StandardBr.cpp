@@ -6,10 +6,10 @@ std::vector<int> calcBr(std::string s) {
     std::vector<int> br(n);
     for (int i = 1; i < n; ++i) {
         int prev = br[i - 1];
-        while (prev > 0 && s[i] != s[prev]) {
+        while (prev > 0 && s[i] != '?' && s[prev] != '?' && s[i] != s[prev]) {
             prev = br[prev - 1];
         }
-        if (s[i] == s[prev]) {
+        if (s[i] == '?' || s[prev] == '?' || s[i] == s[prev]) {
             ++prev;
         }
         br[i] = prev;
@@ -24,10 +24,10 @@ std::vector<int> standardKmp(std::string s, std::string t) {
     int m = t.length();
     std::vector<int> answer;
     for (int i = 0; i < m; ++i) {
-        while (num > 0 && t[i] != s[num]) {
+        while (num > 0 && s[num] != '?' && t[i] != s[num]) {
             num = br[num - 1];
         }
-        if (t[i] == s[num]) {
+        if (s[num] == '?' || t[i] == s[num]) {
             ++num;
         }
         if (num == n) {

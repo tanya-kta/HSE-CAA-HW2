@@ -5,7 +5,8 @@ std::vector<int> calcBrs(std::string s) {
     std::vector<int> br = calcBr(s), brs(n);
     for (int i = 1; i < n; ++i) {
         if (br[i] > 0) {
-            if (i == n - 1 || s[br[i]] != s[i + 1]) {
+            if (i == n - 1 || (s[i + 1] != '?' && s[br[i]] != '?' &&
+                               s[br[i]] != s[i + 1])) {
                 brs[i] = br[i];
             } else {
                 brs[i] = brs[br[i] - 1];
@@ -22,10 +23,10 @@ std::vector<int> smartKmp(std::string s, std::string t) {
     int m = t.length();
     std::vector<int> answer;
     for (int i = 0; i < m; ++i) {
-        while (num > 0 && t[i] != s[num]) {
+        while (num > 0 && s[num] != '?' && t[i] != s[num]) {
             num = brs[num - 1];
         }
-        if (t[i] == s[num]) {
+        if (s[num] == '?' || t[i] == s[num]) {
             ++num;
         }
         if (num == n) {
