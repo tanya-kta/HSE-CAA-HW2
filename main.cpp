@@ -18,12 +18,16 @@ std::vector<std::string> texts({
     binaryText(10000), binaryText(100000),
     dnaText(10000), dnaText(100000)
 });
-std::vector<std::vector<std::string>> samples({
-    getSamples(texts[0]), getSamples(texts[1]), getSamples(texts[2]), getSamples(texts[3])
-});
 std::vector<std::string> text_names({
     "Binary Small Text", "Binary Large Text",
     "DNA Small Text", "DNA Large Text"
+});
+
+std::vector<std::vector<std::string>> samples({
+    getSamples(texts[0]), getSamples(texts[1]), getSamples(texts[2]), getSamples(texts[3])
+});
+std::vector<std::vector<int>> indexes_insert({
+    getIdToInsert(10000), getIdToInsert(100000), getIdToInsert(10000), getIdToInsert(100000)
 });
 
 std::vector<uint64_t> computing_times(algs.size() * texts.size());
@@ -68,8 +72,22 @@ void fillTableRow(std::ofstream *stream, int sample_num) {
     *stream << table_row;
 }
 
-void getTableUpdateSamples() {
-    std::ofstream table("/mnt/c/Users/tanya/Documents/CLionProjects/HSE-HW2/zeroAdds.csv");
+void updateSamples(int num) {
+    if (num == 0) {
+        return;
+    }
+    for (int k = 0; k < samples.size(); ++k) {
+        for (int j = 0; j < samples[k].size(); ++j) {
+            for (int i = 0; i < num; ++i) {
+                samples[k][j][indexes_insert[k][num]] = '?';
+            }
+        }
+    }
+}
+
+void createTable(int num_of_q) {
+    std::ofstream table("/mnt/c/Users/tanya/Documents/CLionProjects/HSE-HW2/" + std::to_string(num_of_q) + "Adds.csv");
+    updateSamples(num_of_q);
     table << getNames();
     for (int sample_num = 0; sample_num <= samples[0].size(); ++sample_num) {
         fillTableRow(&table, sample_num);
@@ -78,6 +96,8 @@ void getTableUpdateSamples() {
 }
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    for (int i = 0; i <= 4; ++i) {
+        createTable(i);
+    }
     return 0;
 }
