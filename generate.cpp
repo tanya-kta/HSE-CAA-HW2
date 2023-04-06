@@ -44,3 +44,11 @@ std::vector<int> getIdToInsert(int size) {
     }
     return ids;
 }
+
+std::vector<std::vector<int>> genIndexes() {
+    std::vector<std::vector<int>> indexes;
+    for (int size = 100; size <= 3000; size += 100) {
+        indexes.push_back(getIdToInsert(size));
+    }
+    return indexes;
+}

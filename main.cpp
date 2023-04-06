@@ -26,9 +26,7 @@ std::vector<std::string> text_names({
 std::vector<std::vector<std::string>> samples({
     getSamples(texts[0]), getSamples(texts[1]), getSamples(texts[2]), getSamples(texts[3])
 });
-std::vector<std::vector<int>> indexes_insert({
-    getIdToInsert(10000), getIdToInsert(100000), getIdToInsert(10000), getIdToInsert(100000)
-});
+std::vector<std::vector<int>> indexes_insert = genIndexes();
 
 std::vector<uint64_t> computing_times(algs.size() * texts.size());
 
@@ -89,7 +87,7 @@ void createTable(int num_of_q) {
     std::ofstream table("/mnt/c/Users/tanya/Documents/CLionProjects/HSE-HW2/" + std::to_string(num_of_q) + "Adds.csv");
     updateSamples(num_of_q);
     table << getNames();
-    for (int sample_num = 0; sample_num <= samples[0].size(); ++sample_num) {
+    for (int sample_num = 0; sample_num < samples[0].size(); ++sample_num) {
         fillTableRow(&table, sample_num);
     }
     table.close();

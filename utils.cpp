@@ -12,7 +12,7 @@ bool checker(std::vector<int>& answer, std::string s, std::string t) {
     int m = s.size();
     for (auto ind : answer) {
         for (int i = ind; i < ind + m; ++i) {
-            if (s[i - ind] != t[i]) {
+            if (s[i - ind] != '?' && s[i - ind] != t[i]) {
                 std::cout << "Ошибка проверки\n" <<
                     "Некоторый индекс не является вхождением.\nСтроки:\n" <<
                     s << "\n" << t << "\n";
