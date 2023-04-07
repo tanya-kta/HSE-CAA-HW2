@@ -40,24 +40,29 @@ std::vector<std::vector<std::string>> samples({
 std::vector<std::vector<int>> indexes_insert = genIndexes();
 
 std::vector<uint64_t> computing_times(algs.size() * texts.size());
-std::vector<uint64_t> operations_count(algs.size() * texts.size(), 0);
+std::vector<uint64_t> operations_count(algs.size() * texts.size());
 
 void calculateComputingTimes(int sample_num) {
     for (int k = 0; k < texts.size(); ++k) {
         std::string sample = samples[k][sample_num];
         for (int j = 0; j < algs.size(); ++j) {
-            auto start = std::chrono::high_resolution_clock::now();
-            std::vector<int> entries = algs[j](sample, texts[k],
-                                               &operations_count[k * algs.size() + j]);
-            auto elapsed = std::chrono::high_resolution_clock::now() - start;
-            if (!checker(entries, sample, texts[k])) {
-                std::cout << "failed to calculate entries of sample:\n" << sample <<
-                    "\nof the text\n" << texts[k] <<
-                    "\nusing " << alg_names[j] << "\nEntries:\n";
-                printArray(entries);
+            computing_times[k * algs.size() + j] = 0;
+            for (int i = 0; i < 4; ++i) {
+                operations_count[k * algs.size() + j] = 0;
+                auto start = std::chrono::high_resolution_clock::now();
+                std::vector<int> entries = algs[j](sample, texts[k],
+                                                   &operations_count[k * algs.size() + j]);
+                auto elapsed = std::chrono::high_resolution_clock::now() - start;
+                if (!checker(entries, sample, texts[k])) {
+                    std::cout << "failed to calculate entries of sample:\n" << sample <<
+                        "\nof the text\n" << texts[k] <<
+                        "\nusing " << alg_names[j] << "\nEntries:\n";
+                    printArray(entries);
+                }
+                computing_times[k * algs.size() + j] +=
+                    std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed).count();
             }
-            computing_times[k * algs.size() + j] =
-                std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed).count();
+            computing_times[k * algs.size() + j] /= 4;
         }
     }
 }
