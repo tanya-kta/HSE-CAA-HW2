@@ -47,7 +47,8 @@ void calculateComputingTimes(int sample_num) {
         std::string sample = samples[k][sample_num];
         for (int j = 0; j < algs.size(); ++j) {
             computing_times[k * algs.size() + j] = 0;
-            for (int i = 0; i < 4; ++i) {
+            int iterations = 10;
+            for (int i = 0; i < iterations; ++i) {
                 operations_count[k * algs.size() + j] = 0;
                 auto start = std::chrono::high_resolution_clock::now();
                 std::vector<int> entries = algs[j](sample, texts[k],
@@ -62,7 +63,7 @@ void calculateComputingTimes(int sample_num) {
                 computing_times[k * algs.size() + j] +=
                     std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed).count();
             }
-            computing_times[k * algs.size() + j] /= 4;
+            computing_times[k * algs.size() + j] /= iterations;
         }
     }
 }
