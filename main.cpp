@@ -84,7 +84,7 @@ void updateSamples(int num) {
 }
 
 void createTable(int num_of_q) {
-    std::ofstream table("/mnt/c/Users/tanya/Documents/CLionProjects/HSE-HW2/" + std::to_string(num_of_q) + "Adds.csv");
+    std::ofstream table("/mnt/c/Users/tanya/Documents/CLionProjects/HSE-HW2/" + std::to_string(num_of_q) + "AddsComputingTime.csv");
     updateSamples(num_of_q);
     table << getNames();
     for (int sample_num = 0; sample_num < samples[0].size(); ++sample_num) {
