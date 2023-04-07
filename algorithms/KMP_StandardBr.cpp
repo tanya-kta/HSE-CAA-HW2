@@ -6,12 +6,12 @@ std::vector<int> calcBr(std::string s, uint64_t *oper) {
     std::vector<int> br(n);
     for (int i = 1; i < n; ++i) {
         int prev = br[i - 1];
-        *oper += 3;
+        *oper += 1;
         while (prev > 0 && s[i] != '?' && s[prev] != '?' && s[i] != s[prev]) {
-            *oper += 3;
+            *oper += 1;
             prev = br[prev - 1];
         }
-        *oper += 3;
+        *oper += 1;
         if (s[i] == '?' || s[prev] == '?' || s[i] == s[prev]) {
             ++prev;
         }
@@ -27,12 +27,12 @@ std::vector<int> standardKmp(std::string s, std::string t, uint64_t *oper) {
     int m = t.length();
     std::vector<int> answer;
     for (int i = 0; i < m; ++i) {
-        *oper += 2;
+        *oper += 1;
         while (num > 0 && s[num] != '?' && t[i] != s[num]) {
-            *oper += 2;
+            *oper += 1;
             num = br[num - 1];
         }
-        *oper += 2;
+        *oper += 1;
         if (s[num] == '?' || t[i] == s[num]) {
             ++num;
         }
