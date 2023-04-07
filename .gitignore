@@ -2,6 +2,7 @@
 .clang-tidy
 .clang-format
 cmake-build-debug
+.ipynb_checkpoints
 
 # Prerequisites
 *.d
