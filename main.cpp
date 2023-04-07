@@ -1,3 +1,14 @@
+/*
+ * АиСД-2, 2023, задание 5
+ * Кадыкова Татьяна Алексеевна
+ * БПИ213
+ * CLion
+ * Сделаны изменения времени и количества операцией алгоритмов: наивный поиск вхождений в текст,
+ * алгоритм КМП (стандартный), алгоритм КМП (с уточненными гранями)
+ * для четырех текстов и размеров шаблонов 100-3000 с шагом 100
+ * и запись результатов в таблицы
+ */
+
 #include <iostream>
 #include <chrono>
 #include <fstream>
@@ -7,7 +18,7 @@
 #include "algorithms/naive.cpp"
 #include "algorithms/KMP_SmartBrs.cpp"
 
-std::vector<std::vector<int> (*)(std::string, std::string)> algs({
+std::vector<std::vector<int> (*)(std::string, std::string, uint64_t *)> algs({
     naive, standardKmp, smartKmp
 });
 std::vector<std::string> alg_names({
@@ -29,13 +40,15 @@ std::vector<std::vector<std::string>> samples({
 std::vector<std::vector<int>> indexes_insert = genIndexes();
 
 std::vector<uint64_t> computing_times(algs.size() * texts.size());
+std::vector<uint64_t> operations_count(algs.size() * texts.size(), 0);
 
 void calculateComputingTimes(int sample_num) {
     for (int k = 0; k < texts.size(); ++k) {
         std::string sample = samples[k][sample_num];
         for (int j = 0; j < algs.size(); ++j) {
             auto start = std::chrono::high_resolution_clock::now();
-            std::vector<int> entries = algs[j](sample, texts[k]);
+            std::vector<int> entries = algs[j](sample, texts[k],
+                                               &operations_count[k * algs.size() + j]);
             auto elapsed = std::chrono::high_resolution_clock::now() - start;
             if (!checker(entries, sample, texts[k])) {
                 std::cout << "failed to calculate entries of sample:\n" << sample <<
@@ -60,14 +73,21 @@ std::string getNames() {
     return first_row;
 }
 
-void fillTableRow(std::ofstream *stream, int sample_num) {
+void fillTableRow(std::ofstream *stream_time, std::ofstream *stream_oper, int sample_num) {
     calculateComputingTimes(sample_num);
     std::string table_row = std::to_string(100 + sample_num * 100);
     for (auto comp_time : computing_times) {
         table_row.append(";" + std::to_string(comp_time));
     }
     table_row.append("\n");
-    *stream << table_row;
+    *stream_time << table_row;
+
+    table_row = std::to_string(100 + sample_num * 100);
+    for (auto operations : operations_count) {
+        table_row.append(";" + std::to_string(operations));
+    }
+    table_row.append("\n");
+    *stream_oper << table_row;
 }
 
 void updateSamples(int num) {
@@ -84,13 +104,20 @@ void updateSamples(int num) {
 }
 
 void createTable(int num_of_q) {
-    std::ofstream table("/mnt/c/Users/tanya/Documents/CLionProjects/HSE-HW2/" + std::to_string(num_of_q) + "AddsComputingTime.csv");
     updateSamples(num_of_q);
+    std::ofstream table("/mnt/c/Users/tanya/Documents/CLionProjects/HSE-HW2/БПИ213_Кадыкова_"
+                        + std::to_string(num_of_q)
+                        + "AddsComputingTime.csv");
+    std::ofstream table_oper("/mnt/c/Users/tanya/Documents/CLionProjects/HSE-HW2/БПИ213_Кадыкова_"
+                             + std::to_string(num_of_q)
+                             + "AddsOperations.csv");
     table << getNames();
+    table_oper << getNames();
     for (int sample_num = 0; sample_num < samples[0].size(); ++sample_num) {
-        fillTableRow(&table, sample_num);
+        fillTableRow(&table, &table_oper, sample_num);
     }
     table.close();
+    table_oper.close();
 }
 
 int main() {

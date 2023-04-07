@@ -1,7 +1,7 @@
 #include <vector>
 #include <string>
 
-std::vector<int> calcBr(std::string s) {
+std::vector<int> calcBr(std::string s, uint64_t *oper) {
     int n = s.length();
     std::vector<int> br(n);
     for (int i = 1; i < n; ++i) {
@@ -17,9 +17,9 @@ std::vector<int> calcBr(std::string s) {
     return br;
 }
 
-std::vector<int> standardKmp(std::string s, std::string t) {
+std::vector<int> standardKmp(std::string s, std::string t, uint64_t *oper) {
     int n = s.length();
-    std::vector<int> br = calcBr(s);
+    std::vector<int> br = calcBr(s, oper);
     int num = 0;
     int m = t.length();
     std::vector<int> answer;
