@@ -110,18 +110,18 @@ void updateSamples(int num) {
 
 void createTable(int num_of_q) {
     updateSamples(num_of_q);
-    std::ofstream table("/mnt/c/Users/tanya/Documents/CLionProjects/HSE-HW2/БПИ213_Кадыкова_"
-                        + std::to_string(num_of_q)
-                        + "AddsComputingTime.csv");
-    std::ofstream table_oper("/mnt/c/Users/tanya/Documents/CLionProjects/HSE-HW2/БПИ213_Кадыкова_"
+    std::ofstream table_time("/mnt/c/Users/tanya/Documents/CLionProjects/HSE-HW2/tables/БПИ213_Кадыкова_"
+                             + std::to_string(num_of_q)
+                             + "AddsComputingTime.csv");
+    std::ofstream table_oper("/mnt/c/Users/tanya/Documents/CLionProjects/HSE-HW2/tables/БПИ213_Кадыкова_"
                              + std::to_string(num_of_q)
                              + "AddsOperations.csv");
-    table << getNames();
+    table_time << getNames();
     table_oper << getNames();
     for (int sample_num = 0; sample_num < samples[0].size(); ++sample_num) {
-        fillTableRow(&table, &table_oper, sample_num);
+        fillTableRow(&table_time, &table_oper, sample_num);
     }
-    table.close();
+    table_time.close();
     table_oper.close();
 }
 
