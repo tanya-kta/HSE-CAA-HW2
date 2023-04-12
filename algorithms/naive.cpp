@@ -1,7 +1,9 @@
 #include <vector>
 #include <string>
 
-std::vector<int> naive(std::string s, std::string t, uint64_t *oper) {
+std::vector<int> naive(std::string s, std::string t,
+                       std::vector<int> (*)(std::string s, uint64_t *oper),
+                       uint64_t *oper) {
     int n = s.size(), m = t.size();
     std::vector<int> answer;
     for (int i = 0; i <= m - n; ++i) {

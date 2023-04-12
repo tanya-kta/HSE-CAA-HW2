@@ -1,5 +1,5 @@
 /*
- * АиСД-2, 2023, задание 5
+ * АиСД-2, 2023, КДЗ2
  * Кадыкова Татьяна Алексеевна
  * БПИ213
  * CLion
@@ -16,10 +16,14 @@
 #include "generate.cpp"
 #include "utils.cpp"
 #include "algorithms/naive.cpp"
-#include "algorithms/KMP_SmartBrs.cpp"
+#include "algorithms/KMP.cpp"
 
-std::vector<std::vector<int> (*)(std::string, std::string, uint64_t *)> algs({
-    naive, standardKmp, smartKmp
+std::vector<std::vector<int> (*)(std::string, std::string,
+                                 std::vector<int> (*)(std::string, uint64_t *),
+                                 uint64_t *)> algs({
+    naive, runKmp, runKmp});
+std::vector<std::vector<int> (*)(std::string, uint64_t *)> pref_functions({
+    nullptr, calcBr, calcBrs
 });
 std::vector<std::string> alg_names({
     "Naive Comparison", "Standard KMP", "Optimal KMP"
@@ -45,16 +49,18 @@ std::vector<uint64_t> operations_count(algs.size() * texts.size());
 void calculateComputingTimes(int sample_num) {
     for (int k = 0; k < texts.size(); ++k) {
         std::string sample = samples[k][sample_num];
+        uint64_t op = 0;
+        std::vector<int> answer = naive(sample, texts[k], nullptr, &op);
         for (int j = 0; j < algs.size(); ++j) {
             computing_times[k * algs.size() + j] = 0;
-            int iterations = 10;
+            int iterations = 1;
             for (int i = 0; i < iterations; ++i) {
                 operations_count[k * algs.size() + j] = 0;
                 auto start = std::chrono::high_resolution_clock::now();
-                std::vector<int> entries = algs[j](sample, texts[k],
+                std::vector<int> entries = algs[j](sample, texts[k], pref_functions[j],
                                                    &operations_count[k * algs.size() + j]);
                 auto elapsed = std::chrono::high_resolution_clock::now() - start;
-                if (!checker(entries, sample, texts[k])) {
+                if (!checker(entries, answer, sample, texts[k])) {
                     std::cout << "failed to calculate entries of sample:\n" << sample <<
                         "\nof the text\n" << texts[k] <<
                         "\nusing " << alg_names[j] << "\nEntries:\n";
