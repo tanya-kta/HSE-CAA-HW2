@@ -53,7 +53,7 @@ void calculateComputingTimes(int sample_num) {
         std::vector<int> answer = naive(sample, texts[k], nullptr, &op);
         for (int j = 0; j < algs.size(); ++j) {
             computing_times[k * algs.size() + j] = 0;
-            int iterations = 1;
+            int iterations = 100;
             for (int i = 0; i < iterations; ++i) {
                 operations_count[k * algs.size() + j] = 0;
                 auto start = std::chrono::high_resolution_clock::now();
